@@ -1,16 +1,17 @@
 import os
-import  sys 
-import  pickle 
-import  numpy as  np 
+import sys 
+import pickle 
+import numpy as  np 
 
 def  unpickle (file):  
-    fp = open(file, 'rb') 
-    if  sys.version_info.major == 2: 
-        data = pickle.load(fp) 
-    elif  sys.version_info.major == 3: 
-        data = pickle.load(fp, encoding='latin-1') 
-        fp.close() 
-    return  data 
+    """ unpickle cares about the python version
+    """
+    with open(file, 'rb') as f:
+        if  sys.version_info.major == 2: 
+            datadict = pickle.load(f) 
+        elif  sys.version_info.major == 3: 
+            datadict = pickle.load(f, encoding='latin-1') 
+    return  datadict
 
 def load_CIFAR10(cifar10dir):
     """load_CIFAR10; returns a Nx3x32x32 uint8 numpy array from the 
@@ -24,7 +25,7 @@ def load_CIFAR10(cifar10dir):
             X_train = data_dic['data']
         else:
             X_train = np. vstack((X_train, data_dic['data']))
-            y_train += data_dic['labels']
+        y_train += data_dic['labels']
     test_data_dic = unpickle(cifar10dir + "/test_batch")
     X_test = test_data_dic['data']
     X_test = X_test.reshape(len(X_test), 3, 32, 32)
